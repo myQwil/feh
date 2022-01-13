@@ -6,3 +6,6 @@
 /man/*.1
 *~
 core
+
+# VSCode folder
+.vscode
