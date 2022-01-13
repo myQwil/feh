@@ -41,6 +41,8 @@ struct __gib_list
 
    gib_list *next;
    gib_list *prev;
+   gib_list *rnext;
+   gib_list *rprev;
 };
 
 typedef int (gib_compare_fn) (void *data1, void *data2);

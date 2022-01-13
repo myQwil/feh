@@ -37,6 +37,8 @@ gib_list_new(void)
    l->data = NULL;
    l->next = NULL;
    l->prev = NULL;
+   l->rnext = NULL;
+   l->rprev = NULL;
    return (l);
 }
 
@@ -367,16 +369,15 @@ gib_list_randomize(gib_list * list)
       farray[r] = farray[i];
       farray[i] = t;
    }
-   list = farray[0];
-   list->prev = NULL;
-   list->next = farray[1];
-   for (i = 1, f = farray[1]; i < len - 1; i++, f = f->next)
+   farray[0]->rprev = NULL;
+   farray[0]->rnext = farray[1];
+   for (i = 1, f = farray[1]; i < len - 1; i++, f = f->rnext)
    {
-      f->prev = farray[i - 1];
-      f->next = farray[i + 1];
+      f->rprev = farray[i - 1];
+      f->rnext = farray[i + 1];
    }
-   f->prev = farray[len - 2];
-   f->next = NULL;
+   f->rprev = farray[len - 2];
+   f->rnext = NULL;
    free(farray);
    return (list);
 }

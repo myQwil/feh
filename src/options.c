@@ -563,11 +563,6 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 						"sort by filename", optarg);
 				opt.sort = SORT_FILENAME;
 			}
-			if (opt.randomize) {
-				weprintf("commandline contains --randomize and --sort. "
-						"--randomize has been unset");
-				opt.randomize = 0;
-			}
 			break;
 		case OPTION_theme:
 			theme = estrdup(optarg);
@@ -680,11 +675,6 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 			break;
 		case OPTION_randomize:
 			opt.randomize = 1;
-			if (opt.sort != SORT_NONE) {
-				weprintf("commandline contains --sort and --randomize. "
-						"--sort has been unset");
-				opt.sort = SORT_NONE;
-			}
 			break;
 		case OPTION_start_at:
 			opt.start_list_at = estrdup(optarg);

@@ -287,6 +287,8 @@ enum key_action {
 	EVENT_scroll_up_page,
 	EVENT_prev_img,
 	EVENT_next_img,
+	EVENT_rprev_img,
+	EVENT_rnext_img,
 	EVENT_jump_back,
 	EVENT_jump_fwd,
 	EVENT_prev_dir,
