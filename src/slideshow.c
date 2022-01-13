@@ -126,7 +126,7 @@ void init_slideshow_mode(void)
 
 void cb_slide_timer(void *data)
 {
-	slideshow_change_image((winwidget) data, SLIDE_NEXT, 1);
+	slideshow_change_image((winwidget) data, SLIDE_RNEXT, 1);
 	return;
 }
 
@@ -241,10 +241,12 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 #endif
 		switch (change) {
 		case SLIDE_NEXT:
-			current_file = feh_list_jump(filelist, current_file, FORWARD, 1);
+		case SLIDE_RNEXT:
+			current_file = feh_list_jump(filelist, current_file, change, 1);
 			break;
 		case SLIDE_PREV:
-			current_file = feh_list_jump(filelist, current_file, BACK, 1);
+		case SLIDE_RPREV:
+			current_file = feh_list_jump(filelist, current_file, change, 1);
 			break;
 		case SLIDE_RAND:
 			if (filelist_len > 1) {
@@ -666,26 +668,28 @@ gib_list *feh_list_jump(gib_list * root, gib_list * l, int direction, int num)
 	ret = l;
 
 	for (i = 0; i < num; i++) {
-		if (direction == FORWARD) {
-			if (ret->next) {
-				ret = ret->next;
+		switch (direction) {
+		case SLIDE_NEXT:
+		case SLIDE_RNEXT: {
+			gib_list *next = (direction == SLIDE_NEXT ? ret->next : ret->rnext);
+			if (next) {
+				ret = next;
 			} else {
 				if (opt.on_last_slide == ON_LAST_SLIDE_QUIT) {
 					exit(0);
 				}
-				if (opt.randomize) {
-					/* Randomize the filename order */
-					filelist = gib_list_randomize(filelist);
-					ret = filelist;
-				} else {
-					ret = root;
-				}
+				ret = root;
 			}
-		} else {
-			if (ret->prev)
-				ret = ret->prev;
+		} break;
+
+		case SLIDE_PREV:
+		case SLIDE_RPREV: {
+			gib_list *prev = (direction == SLIDE_PREV ? ret->prev : ret->rprev);
+			if (prev)
+				ret = prev;
 			else
 				ret = gib_list_last(ret);
+		} break;
 		}
 	}
 	return (ret);

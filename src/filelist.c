@@ -509,15 +509,6 @@ void feh_prepare_filelist(void)
 
 	D(("sort mode requested is: %d\n", opt.sort));
 	switch (opt.sort) {
-	case SORT_NONE:
-		if (opt.randomize) {
-			/* Randomize the filename order */
-			filelist = gib_list_randomize(filelist);
-		} else if (!opt.reverse) {
-			/* Let's reverse the list. Its back-to-front right now ;) */
-			filelist = gib_list_reverse(filelist);
-		}
-		break;
 	case SORT_NAME:
 		filelist = gib_list_sort(filelist, feh_cmp_name);
 		break;
@@ -549,10 +540,14 @@ void feh_prepare_filelist(void)
 		break;
 	}
 
-	/* no point reversing a random list */
-	if (opt.reverse && (opt.sort != SORT_NONE)) {
+	if (opt.reverse) {
 		D(("Reversing filelist as requested\n"));
 		filelist = gib_list_reverse(filelist);
+	}
+
+	if (opt.randomize) {
+		/* Randomize the filename order */
+		filelist = gib_list_randomize(filelist);
 	}
 
 	return;

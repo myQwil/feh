@@ -153,8 +153,10 @@ void init_keyevents(void) {
 	feh_set_kb("scroll_right_page", 8, XK_Right, 0, 0          , 0, 0);
 	feh_set_kb("scroll_down_page" , 8, XK_Down , 0, 0          , 0, 0);
 	feh_set_kb("scroll_up_page" , 8, XK_Up   , 0, 0          , 0, 0);
-	feh_set_kb("prev_img"  , 0, XK_Left      , 0, XK_p         , 0, XK_BackSpace);
-	feh_set_kb("next_img"  , 0, XK_Right     , 0, XK_n         , 0, XK_space);
+	feh_set_kb("prev_img"  , 0, XK_Left      , 0, XK_p         , 0, 0);
+	feh_set_kb("next_img"  , 0, XK_Right     , 0, XK_n         , 0, 0);
+	feh_set_kb("rprev_img" , 0, XK_BackSpace , 0, 0            , 0, 0);
+	feh_set_kb("rnext_img" , 0, XK_space     , 0, 0            , 0, 0);
 	feh_set_kb("jump_back" , 0, XK_Page_Up   , 0, XK_KP_Page_Up, 0, 0);
 	feh_set_kb("jump_fwd"  , 0, XK_Page_Down , 0, XK_KP_Page_Down,0,0);
 	feh_set_kb("prev_dir"  , 0, XK_bracketleft, 0, 0           , 0, 0);
@@ -487,6 +489,18 @@ void feh_event_handle_generic(winwidget winwid, unsigned int state, KeySym keysy
 	else if (feh_is_kp(EVENT_prev_img, state, keysym, button)) {
 		if (opt.slideshow)
 			slideshow_change_image(winwid, SLIDE_PREV, 1);
+		else if (winwid->type == WIN_TYPE_THUMBNAIL)
+			feh_thumbnail_select_prev(winwid, 1);
+	}
+	else 	if (feh_is_kp(EVENT_rnext_img, state, keysym, button)) {
+		if (opt.slideshow)
+			slideshow_change_image(winwid, SLIDE_RNEXT, 1);
+		else if (winwid->type == WIN_TYPE_THUMBNAIL)
+			feh_thumbnail_select_next(winwid, 1);
+	}
+	else if (feh_is_kp(EVENT_rprev_img, state, keysym, button)) {
+		if (opt.slideshow)
+			slideshow_change_image(winwid, SLIDE_RPREV, 1);
 		else if (winwid->type == WIN_TYPE_THUMBNAIL)
 			feh_thumbnail_select_prev(winwid, 1);
 	}

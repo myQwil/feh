@@ -324,6 +324,16 @@ static void feh_event_handle_ButtonPress(XEvent * ev)
 		if (winwid->type == WIN_TYPE_SLIDESHOW)
 			slideshow_change_image(winwid, SLIDE_NEXT, 1);
 
+	} else if (feh_is_bb(EVENT_rprev_img, button, state)) {
+		D(("Prev Button Press event\n"));
+		if (winwid->type == WIN_TYPE_SLIDESHOW)
+			slideshow_change_image(winwid, SLIDE_RPREV, 1);
+
+	} else if (feh_is_bb(EVENT_rnext_img, button, state)) {
+		D(("Next Button Press event\n"));
+		if (winwid->type == WIN_TYPE_SLIDESHOW)
+			slideshow_change_image(winwid, SLIDE_RNEXT, 1);
+
 	} else {
 		D(("Received other ButtonPress event\n"));
 		feh_event_handle_generic(winwid, state, NoSymbol, button);
