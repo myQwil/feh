@@ -126,7 +126,8 @@ void init_slideshow_mode(void)
 
 void cb_slide_timer(void *data)
 {
-	slideshow_change_image((winwidget) data, SLIDE_RNEXT, 1);
+	enum slide_change next = opt.timer_random ? SLIDE_RNEXT : SLIDE_NEXT;
+	slideshow_change_image((winwidget) data, next, 1);
 	return;
 }
 
