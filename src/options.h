@@ -86,6 +86,7 @@ struct __fehoptions {
 	unsigned char insecure_ssl;
 	unsigned char filter_by_dimensions;
 	unsigned char edit;
+	unsigned char timer_random;
 
 	char *output_file;
 	char *output_dir;
@@ -223,6 +224,7 @@ OPTION_zoom_step,
 OPTION_zoom_in_rate,
 OPTION_zoom_out_rate,
 OPTION_keep_zoom_vp,
+OPTION_timer_random,
 OPTION_no_screen_clip,
 OPTION_index_info,
 OPTION_magick_timeout,
@@ -289,6 +291,7 @@ enum key_action {
 	EVENT_next_img,
 	EVENT_rprev_img,
 	EVENT_rnext_img,
+	EVENT_toggle_random,
 	EVENT_jump_back,
 	EVENT_jump_fwd,
 	EVENT_prev_dir,

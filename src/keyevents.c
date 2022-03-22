@@ -157,12 +157,13 @@ void init_keyevents(void) {
 	feh_set_kb("next_img"  , 0, XK_Right     , 0, XK_n         , 0, 0);
 	feh_set_kb("rprev_img" , 0, XK_BackSpace , 0, 0            , 0, 0);
 	feh_set_kb("rnext_img" , 0, XK_space     , 0, 0            , 0, 0);
+	feh_set_kb("toggle_random", 0, XK_q      , 0, 0            , 0, 0);
 	feh_set_kb("jump_back" , 0, XK_Page_Up   , 0, XK_KP_Page_Up, 0, 0);
 	feh_set_kb("jump_fwd"  , 0, XK_Page_Down , 0, XK_KP_Page_Down,0,0);
 	feh_set_kb("prev_dir"  , 0, XK_bracketleft, 0, 0           , 0, 0);
 	feh_set_kb("next_dir"  , 0, XK_bracketright, 0, 0          , 0, 0);
 	feh_set_kb("jump_random" ,0, XK_z         , 0, 0            , 0, 0);
-	feh_set_kb("quit"      , 0, XK_Escape    , 0, XK_q         , 0, 0);
+	feh_set_kb("quit"      , 0, XK_Escape    , 0, 0            , 0, 0);
 	feh_set_kb("close"     , 0, XK_x         , 0, 0            , 0, 0);
 	feh_set_kb("remove"    , 0, XK_Delete    , 0, 0            , 0, 0);
 	feh_set_kb("delete"    , 4, XK_Delete    , 0, 0            , 0, 0);
@@ -815,6 +816,9 @@ void feh_event_handle_generic(winwidget winwid, unsigned int state, KeySym keysy
 	}
 	else if (feh_is_kp(EVENT_toggle_keep_vp, state, keysym, button)) {
 		opt.keep_zoom_vp = !opt.keep_zoom_vp;
+	}
+	else if (feh_is_kp(EVENT_toggle_random, state, keysym, button)) {
+		opt.timer_random = !opt.timer_random;
 	}
 	else if (feh_is_kp(EVENT_toggle_fixed_geometry, state, keysym, button)) {
 		if (opt.geom_flags & ((WidthValue | HeightValue))) {
