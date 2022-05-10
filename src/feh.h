@@ -127,6 +127,7 @@ enum feh_load_error {
 
 #define INPLACE_EDIT_FLIP   -1
 #define INPLACE_EDIT_MIRROR -2
+#define INPLACE_EDIT_INVERT -3
 
 #define ZOOM_MIN 0.002
 #define ZOOM_MAX 2000
