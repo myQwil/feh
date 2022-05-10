@@ -1527,6 +1527,19 @@ void feh_display_status(char stat)
 	return;
 }
 
+static void imlib_image_color_invert(double v)
+{
+	uint8_t r[256], g[256], b[256], a[256];
+	for (int i = 256; i--;) {
+		r[i] = g[i] = b[i] = i + v * (255 - (i << 1));
+		a[i] = i;
+	}
+	imlib_context_set_color_modifier(imlib_create_color_modifier());
+	imlib_set_color_modifier_tables(r, g, b, a);
+	imlib_apply_color_modifier();
+	imlib_free_color_modifier();
+}
+
 void feh_edit_inplace(winwidget w, int op)
 {
 	int tmp;
@@ -1541,6 +1554,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_vertical();
 		else if (op == INPLACE_EDIT_MIRROR)
 			imlib_image_flip_horizontal();
+		else if (op == INPLACE_EDIT_INVERT)
+			imlib_image_color_invert(1);
 		else {
 			imlib_image_orientate(op);
 			if(op != 2) {
@@ -1574,6 +1589,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_vertical();
 		else if (op == INPLACE_EDIT_MIRROR)
 			imlib_image_flip_horizontal();
+		else if (op == INPLACE_EDIT_INVERT)
+			imlib_image_color_invert(1);
 		else
 			imlib_image_orientate(op);
 		gib_imlib_save_image_with_error_return(old,
@@ -1593,6 +1610,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_vertical();
 		else if (op == INPLACE_EDIT_MIRROR)
 			imlib_image_flip_horizontal();
+		else if (op == INPLACE_EDIT_INVERT)
+			imlib_image_color_invert(1);
 		else {
 			imlib_image_orientate(op);
 			tmp = w->im_w;

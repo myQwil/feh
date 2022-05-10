@@ -340,6 +340,7 @@ enum key_action {
 	EVENT_orient_3,
 	EVENT_flip,
 	EVENT_mirror,
+	EVENT_invert,
 	EVENT_reload_minus,
 	EVENT_reload_plus,
 	EVENT_toggle_keep_vp,
