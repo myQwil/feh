@@ -34,8 +34,8 @@ enum on_last_slide_action {
 };
 
 enum timer_next_action {
-	SEQUENTIAL,
-	RANDOM
+	TIMER_NEXT_SEQUENTIAL = 0,
+	TIMER_NEXT_RANDOM
 };
 
 struct __fehoptions {
