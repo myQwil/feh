@@ -53,7 +53,7 @@ void init_parse_options(int argc, char **argv)
 	memset(&opt, 0, sizeof(fehoptions));
 	opt.display = 1;
 	opt.aspect = 1;
-	opt.timer_next = RANDOM;
+	opt.timer_next = TIMER_NEXT_RANDOM;
 	opt.flipped = 0;
 	opt.mirrored = 0;
 	opt.inverted = 0;
@@ -795,6 +795,25 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 			break;
 		case OPTION_keep_zoom_vp:
 			opt.keep_zoom_vp = 1;
+			break;
+		case OPTION_timer_next:
+			if (!strcmp(optarg, "sequential")) {
+				opt.timer_next = TIMER_NEXT_SEQUENTIAL;
+			} else if (!strcmp(optarg, "random")) {
+				opt.timer_next = TIMER_NEXT_RANDOM;
+			} else {
+				weprintf("Unrecognized timer-next action \"%s\"."
+						"Supported actions: sequential, random\n", optarg);
+			}
+			break;
+		case OPTION_flipped:
+			opt.flipped = 1;
+			break;
+		case OPTION_mirrored:
+			opt.mirrored = 1;
+			break;
+		case OPTION_inverted:
+			opt.inverted = 1;
 			break;
 		case OPTION_scroll_step:
 			opt.scroll_step = atoi(optarg);
