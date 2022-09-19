@@ -185,8 +185,8 @@ Imlib_Font gib_imlib_load_font(char *name);
 void gib_imlib_image_orientate(Imlib_Image im, int orientation);
 void gib_imlib_image_flip_horizontal(Imlib_Image im);
 void gib_imlib_image_flip_vertical(Imlib_Image im);
-void gib_imlib_image_color_invert(Imlib_Image im);
-void imlib_image_color_invert(void);
+void gib_imlib_image_color_invert(Imlib_Image im, double rate);
+void imlib_image_color_invert(double rate);
 
 #ifdef __cplusplus
 }

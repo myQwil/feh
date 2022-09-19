@@ -731,8 +731,8 @@ void gib_imlib_image_flip_vertical(Imlib_Image im)
   imlib_image_flip_vertical();
 }
 
-void gib_imlib_image_color_invert(Imlib_Image im)
+void gib_imlib_image_color_invert(Imlib_Image im, double rate)
 {
    imlib_context_set_image(im);
-   imlib_image_color_invert();
+   imlib_image_color_invert(rate);
 }

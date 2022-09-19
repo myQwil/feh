@@ -356,7 +356,7 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 
 			if (opt.flipped)  gib_imlib_image_flip_vertical(winwid->im);
 			if (opt.mirrored) gib_imlib_image_flip_horizontal(winwid->im);
-			if (opt.inverted) gib_imlib_image_color_invert(winwid->im);
+			if (opt.inverted) gib_imlib_image_color_invert(winwid->im, 1.);
 
 			if (render) {
 				winwidget_render_image(winwid, 1, 0);

@@ -118,6 +118,7 @@ void init_buttonbindings(void)
 	feh_set_bb(EVENT_zoom_out,    0, 5);
 	feh_set_bb(EVENT_blur,        4, 1);
 	feh_set_bb(EVENT_rotate,      4, 2);
+	feh_set_bb(EVENT_invert,      4, 3);
 
 	home = getenv("HOME");
 	confhome = getenv("XDG_CONFIG_HOME");
@@ -225,6 +226,12 @@ static void feh_event_handle_ButtonPress(XEvent * ev)
 		opt.mode = MODE_BLUR;
 		winwid->mode = MODE_BLUR;
 		D(("blur starting at %d, %d\n", ev->xbutton.x, ev->xbutton.y));
+
+	} else if (feh_is_bb(EVENT_invert, button, state)
+		   && (winwid->type != WIN_TYPE_THUMBNAIL)) {
+		opt.mode = MODE_INVERT;
+		winwid->mode = MODE_INVERT;
+		D(("invert starting at %d, %d\n", ev->xbutton.x, ev->xbutton.y));
 
 	} else if (feh_is_bb(EVENT_pan, button, state)) {
 		D(("Next button, but could be pan mode\n"));
@@ -433,6 +440,11 @@ static void feh_event_handle_ButtonRelease(XEvent * ev)
 		winwidget_render_image(winwid, 0, 0);
 
 	} else if (feh_is_bb(EVENT_blur, button, state)) {
+		D(("Disabling Blur mode\n"));
+		opt.mode = MODE_NORMAL;
+		winwid->mode = MODE_NORMAL;
+
+	} else if (feh_is_bb(EVENT_invert, button, state)) {
 		D(("Disabling Blur mode\n"));
 		opt.mode = MODE_NORMAL;
 		winwid->mode = MODE_NORMAL;
@@ -687,6 +699,28 @@ static void feh_event_handle_MotionNotify(XEvent * ev)
 					gib_imlib_image_sharpen(temp, blur_radius);
 				else
 					gib_imlib_image_blur(temp, 0 - blur_radius);
+				ptr = winwid->im;
+				winwid->im = temp;
+				winwidget_render_image(winwid, 0, 1);
+				gib_imlib_free_image_and_decache(winwid->im);
+				winwid->im = ptr;
+			}
+		}
+	} else if (opt.mode == MODE_INVERT) {
+		while (XCheckTypedWindowEvent(disp, ev->xmotion.window, MotionNotify, ev));
+		winwid = winwidget_get_from_window(ev->xmotion.window);
+		if (winwid) {
+			Imlib_Image temp, ptr;
+			double invert_rate;
+
+			D(("Inverting\n"));
+
+			temp = gib_imlib_clone_image(winwid->im);
+			if (temp != NULL) {
+				int trim = winwid->w * 0.1;
+				invert_rate = ((double)ev->xmotion.x - trim) / (winwid->w - (trim << 1));
+				D(("rate: %d\n", invert_rate));
+				gib_imlib_image_color_invert(temp, invert_rate);
 				ptr = winwid->im;
 				winwid->im = temp;
 				winwidget_render_image(winwid, 0, 1);
