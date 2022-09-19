@@ -149,7 +149,7 @@ winwidget winwidget_create_from_file(gib_list * list, char type)
 
 		if (opt.flipped)  gib_imlib_image_flip_vertical(ret->im);
 		if (opt.mirrored) gib_imlib_image_flip_horizontal(ret->im);
-		if (opt.inverted) gib_imlib_image_color_invert(ret->im);
+		if (opt.inverted) gib_imlib_image_color_invert(ret->im, 1.);
 
 		winwidget_create_window(ret, ret->w, ret->h);
 		winwidget_render_image(ret, 1, 0);
