@@ -90,6 +90,7 @@ struct __fehoptions {
 	unsigned char flipped;
 	unsigned char mirrored;
 	unsigned char inverted;
+	unsigned char rotation;
 
 	char *output_file;
 	char *output_dir;
@@ -231,6 +232,7 @@ OPTION_next_random,
 OPTION_flipped,
 OPTION_mirrored,
 OPTION_inverted,
+OPTION_rotation,
 OPTION_no_screen_clip,
 OPTION_index_info,
 OPTION_magick_timeout,

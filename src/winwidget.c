@@ -136,6 +136,7 @@ winwidget winwidget_create_from_file(gib_list * list, char type)
 	}
 
 	if (!ret->win) {
+		gib_imlib_image_orientate(ret->im, opt.rotation);
 		ret->w = ret->im_w = gib_imlib_image_get_width(ret->im);
 		ret->h = ret->im_h = gib_imlib_image_get_height(ret->im);
 		D(("image is %dx%d pixels, format %s\n", ret->w, ret->h, gib_imlib_image_format(ret->im)));

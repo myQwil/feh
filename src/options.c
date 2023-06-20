@@ -57,6 +57,7 @@ void init_parse_options(int argc, char **argv)
 	opt.flipped = 0;
 	opt.mirrored = 0;
 	opt.inverted = 0;
+	opt.rotation = 0;
 	opt.slideshow_delay = 0.0;
 	opt.conversion_timeout = -1;
 	opt.thumb_w = 60;
@@ -433,6 +434,7 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 		{"flipped"       , 0, 0, OPTION_flipped},
 		{"mirrored"      , 0, 0, OPTION_mirrored},
 		{"inverted"      , 0, 0, OPTION_inverted},
+		{"rotation"      , 1, 0, OPTION_rotation},
 		{"scroll-step"   , 1, 0, OPTION_scroll_step},
 		{"xinerama-index", 1, 0, OPTION_xinerama_index},
 		{"insecure"      , 0, 0, OPTION_insecure},
@@ -807,6 +809,9 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 			break;
 		case OPTION_inverted:
 			opt.inverted = 1;
+			break;
+		case OPTION_rotation:
+			opt.rotation = atoi(optarg);
 			break;
 		case OPTION_scroll_step:
 			opt.scroll_step = atoi(optarg);

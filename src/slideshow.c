@@ -339,6 +339,7 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 		}
 
 		if (winwidget_loadimage(winwid, FEH_FILE(current_file->data))) {
+			gib_imlib_image_orientate(winwid->im, opt.rotation);
 			int w = gib_imlib_image_get_width(winwid->im);
 			int h = gib_imlib_image_get_height(winwid->im);
 			if (feh_should_ignore_image(winwid->im)) {
