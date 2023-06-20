@@ -126,7 +126,7 @@ void init_slideshow_mode(void)
 
 void cb_slide_timer(void *data)
 {
-	enum slide_change next = opt.timer_random ? SLIDE_RNEXT : SLIDE_NEXT;
+	enum slide_change next = opt.timer_next == RANDOM ? SLIDE_RNEXT : SLIDE_NEXT;
 	slideshow_change_image((winwidget) data, next, 1);
 	return;
 }
@@ -352,6 +352,11 @@ void slideshow_change_image(winwidget winwid, int change, int render)
 			winwidget_reset_image(winwid);
 			winwid->im_w = w;
 			winwid->im_h = h;
+
+			if (opt.flipped)  gib_imlib_image_flip_vertical(winwid->im);
+			if (opt.mirrored) gib_imlib_image_flip_horizontal(winwid->im);
+			if (opt.inverted) gib_imlib_image_color_invert(winwid->im);
+
 			if (render) {
 				winwidget_render_image(winwid, 1, 0);
 			}
