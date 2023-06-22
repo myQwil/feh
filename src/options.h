@@ -107,6 +107,7 @@ struct __fehoptions {
 	char *menu_font;
 	char *customlist;
 	char *caption_path;
+	char *config_path;
 	char *start_list_at;
 	char *info_cmd;
 	char *index_info;
@@ -265,6 +266,7 @@ OPTION_conversion_timeout,
 OPTION_version_sort,
 OPTION_offset,
 OPTION_offset_y,
+OPTION_config_path,
 OPTION_auto_reload,
 OPTION_class,
 OPTION_no_conversion_cache,

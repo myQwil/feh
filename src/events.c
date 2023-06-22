@@ -123,7 +123,9 @@ void init_buttonbindings(void)
 	home = getenv("HOME");
 	confhome = getenv("XDG_CONFIG_HOME");
 
-	if (confhome)
+	if (opt.config_path)
+		confpath = estrjoin("/", opt.config_path, "buttons", NULL);
+	else if (confhome)
 		confpath = estrjoin("/", confhome, "feh/buttons", NULL);
 	else if (home)
 		confpath = estrjoin("/", home, ".config/feh/buttons", NULL);

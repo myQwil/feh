@@ -445,6 +445,7 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 		{"version-sort"  , 0, 0, OPTION_version_sort},
 		{"offset"        , 1, 0, OPTION_offset},
 		{"offset-y"      , 1, 0, OPTION_offset_y},
+		{"config-path"   , 1, 0, OPTION_config_path},
 #ifdef HAVE_INOTIFY
 		{"auto-reload"   , 0, 0, OPTION_auto_reload},
 #endif
@@ -859,6 +860,9 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 			opt.offset_flags = XParseGeometry(optarg, (unsigned int *)&discard,
 					&opt.offset_y, (unsigned int *)&discard, (unsigned int *)&discard);
 			opt.offset_flags ^= XValue;
+			break;
+		case OPTION_config_path:
+			opt.config_path = estrdup(optarg);
 			break;
 #ifdef HAVE_INOTIFY
 		case OPTION_auto_reload:
