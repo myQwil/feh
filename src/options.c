@@ -857,7 +857,7 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 					&opt.offset_y, (unsigned int *)&discard, (unsigned int *)&discard);
 			break;
 		case OPTION_offset_y:
-			opt.offset_flags = XParseGeometry(optarg, (unsigned int *)&discard,
+			opt.offset_flags = XParseGeometry(optarg, (int *)&discard,
 					&opt.offset_y, (unsigned int *)&discard, (unsigned int *)&discard);
 			opt.offset_flags ^= XValue;
 			break;
