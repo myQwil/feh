@@ -33,11 +33,6 @@ enum on_last_slide_action {
 	ON_LAST_SLIDE_HOLD
 };
 
-enum timer_next_action {
-	TIMER_NEXT_SEQUENTIAL = 0,
-	TIMER_NEXT_RANDOM
-};
-
 struct __fehoptions {
 	unsigned char multiwindow;
 	unsigned char montage;
@@ -91,7 +86,7 @@ struct __fehoptions {
 	unsigned char insecure_ssl;
 	unsigned char filter_by_dimensions;
 	unsigned char edit;
-	unsigned char timer_next;
+	unsigned char next_random;
 	unsigned char flipped;
 	unsigned char mirrored;
 	unsigned char inverted;
@@ -232,7 +227,7 @@ OPTION_zoom_step,
 OPTION_zoom_in_rate,
 OPTION_zoom_out_rate,
 OPTION_keep_zoom_vp,
-OPTION_timer_next,
+OPTION_next_random,
 OPTION_flipped,
 OPTION_mirrored,
 OPTION_inverted,

@@ -112,8 +112,8 @@ void init_buttonbindings(void)
 	int read = 0;
 
 	feh_set_bb(EVENT_pan,         0, 1);
-	feh_set_bb(EVENT_zoom,        0, 2);
-	feh_set_bb(EVENT_prev_img,    0, 3);
+	feh_set_bb(EVENT_zoom_default,0, 2);
+	feh_set_bb(EVENT_zoom,        0, 3);
 	feh_set_bb(EVENT_zoom_in,     0, 4);
 	feh_set_bb(EVENT_zoom_out,    0, 5);
 	feh_set_bb(EVENT_blur,        4, 1);
@@ -243,19 +243,20 @@ static void feh_event_handle_ButtonPress(XEvent * ev)
 		winwid->click_start_time = time(NULL);
 
 	} else if (feh_is_bb(EVENT_zoom, button, state)) {
-		D(("Zoom Button Press event\n"));
-		opt.mode = MODE_ZOOM;
-		winwid->mode = MODE_ZOOM;
+		D(("Prev button, but could be zoom mode\n"));
+		opt.mode = MODE_PREV;
+		winwid->mode = MODE_PREV;
 		D(("click offset is %d,%d\n", ev->xbutton.x, ev->xbutton.y));
 		winwid->click_offset_x = ev->xbutton.x;
 		winwid->click_offset_y = ev->xbutton.y;
-		winwid->old_step = round(log(winwid->zoom) / opt.zoom_rate);
+		winwid->click_start_time = time(NULL);
 
-		/* required to adjust the image position in zoom mode */
-		winwid->im_click_offset_x = (winwid->click_offset_x
-				- winwid->im_x) / winwid->zoom;
-		winwid->im_click_offset_y = (winwid->click_offset_y
-				- winwid->im_y) / winwid->zoom;
+	} else if (feh_is_bb(EVENT_zoom_default, button, state)) {
+		D(("Zoom_Default Button Press event\n"));
+		winwid->zoom = 1.0;
+		winwid->zoom_step = 0;
+		winwidget_center_image(winwid);
+		winwidget_render_image(winwid, 0, 0);
 
 	} else if (feh_is_bb(EVENT_zoom_in, button, state)) {
 		D(("Zoom_In Button Press event\n"));
@@ -377,21 +378,28 @@ static void feh_event_handle_ButtonRelease(XEvent * ev)
 		return;
 	}
 
-	if (feh_is_bb(EVENT_pan, button, state)) {
-		if (opt.mode == MODE_PAN) {
-			D(("Disabling pan mode\n"));
+	if (feh_is_bb(EVENT_pan, button, state)
+			|| feh_is_bb(EVENT_zoom, button, state)) {
+		if (opt.mode == MODE_PAN || opt.mode == MODE_ZOOM) {
+			D(("Disabling mode\n"));
+			if (opt.mode == MODE_ZOOM)
+				winwid->zoom_step = round(log(winwid->zoom) / opt.step_rate);
 			opt.mode = MODE_NORMAL;
 			winwid->mode = MODE_NORMAL;
 			winwidget_sanitise_offsets(winwid);
 			winwidget_render_image(winwid, 0, 0);
-		} else if (opt.mode == MODE_NEXT) {
+
+		} else if (opt.mode == MODE_NEXT || opt.mode == MODE_PREV) {
+			int change = opt.mode;
 			opt.mode = MODE_NORMAL;
 			winwid->mode = MODE_NORMAL;
 			if (winwid->type == WIN_TYPE_SLIDESHOW) {
 				if (opt.tap_zones && ev->xbutton.x < winwid->w / 2)
 					slideshow_change_image(winwid, SLIDE_PREV, 1);
 				else
-					slideshow_change_image(winwid, SLIDE_NEXT, 1);
+					slideshow_change_image(winwid, change == MODE_NEXT
+						? (opt.next_random ? SLIDE_RNEXT : SLIDE_NEXT)
+						: (opt.next_random ? SLIDE_RPREV : SLIDE_PREV), 1);
 			} else if (winwid->type == WIN_TYPE_THUMBNAIL) {
 				feh_file *thumbfile;
 				int x, y;
@@ -418,25 +426,11 @@ static void feh_event_handle_ButtonRelease(XEvent * ev)
 			winwid->mode = MODE_NORMAL;
 		}
 
-	} else if (feh_is_bb(EVENT_rotate, button, state)
-			|| feh_is_bb(EVENT_zoom, button, state)) {
-		D(("Disabling mode\n"));
+	} else if (feh_is_bb(EVENT_rotate, button, state)) {
+		D(("Disabling Rotate mode\n"));
 		opt.mode = MODE_NORMAL;
 		winwid->mode = MODE_NORMAL;
-
-		if ((feh_is_bb(EVENT_zoom, button, state))) {
-			if ((ev->xbutton.x == winwid->click_offset_x)
-					&& (ev->xbutton.y == winwid->click_offset_y)) {
-				winwid->zoom = 1.0;
-				winwid->zoom_step = 0;
-				winwidget_center_image(winwid);
-			} else {
-				winwid->zoom_step = round(log(winwid->zoom) / opt.step_rate);
-				winwidget_sanitise_offsets(winwid);
-			}
-		} else
-			winwidget_sanitise_offsets(winwid);
-
+		winwidget_sanitise_offsets(winwid);
 		winwidget_render_image(winwid, 0, 0);
 
 	} else if (feh_is_bb(EVENT_blur, button, state)) {
@@ -572,11 +566,28 @@ static void feh_event_handle_MotionNotify(XEvent * ev)
 					feh_menu_slide_all_menus_relative(dx, dy);
 			}
 		}
-	} else if (opt.mode == MODE_ZOOM) {
+	} else if ((opt.mode == MODE_ZOOM) || (opt.mode == MODE_PREV)) {
 		while (XCheckTypedWindowEvent(disp, ev->xmotion.window, MotionNotify, ev));
 
 		winwid = winwidget_get_from_window(ev->xmotion.window);
 		if (winwid && opt.zoom_rate > 0) {
+			if (opt.mode == MODE_PREV) {
+				if ((abs(winwid->click_offset_x - (ev->xmotion.x - winwid->im_x)) > FEH_JITTER_OFFSET)
+						|| (abs(winwid->click_offset_y - (ev->xmotion.y - winwid->im_y)) > FEH_JITTER_OFFSET)
+						|| (time(NULL) - winwid->click_start_time > FEH_JITTER_TIME)) {
+					opt.mode = MODE_ZOOM;
+					winwid->mode = MODE_ZOOM;
+					winwid->old_step = round(log(winwid->zoom) / opt.zoom_rate);
+
+					/* required to adjust the image position in zoom mode */
+					winwid->im_click_offset_x = (winwid->click_offset_x
+							- winwid->im_x) / winwid->zoom;
+					winwid->im_click_offset_y = (winwid->click_offset_y
+							- winwid->im_y) / winwid->zoom;
+				}
+				else
+					return;
+			}
 			int step = winwid->old_step + ev->xmotion.x - winwid->click_offset_x;
 			winwid->zoom = exp(step * opt.zoom_rate);
 
@@ -719,7 +730,7 @@ static void feh_event_handle_MotionNotify(XEvent * ev)
 			if (temp != NULL) {
 				int trim = winwid->w * 0.1;
 				invert_rate = ((double)ev->xmotion.x - trim) / (winwid->w - (trim << 1));
-				D(("rate: %d\n", invert_rate));
+				D(("rate: %f\n", invert_rate));
 				gib_imlib_image_color_invert(temp, invert_rate);
 				ptr = winwid->im;
 				winwid->im = temp;
