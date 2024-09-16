@@ -334,7 +334,7 @@ int feh_load_image(Imlib_Image * im, feh_file * file)
 	char *tmpname = NULL;
 	char *real_filename = NULL;
 
-	D(("filename is %s, image is %p\n", file->filename, im));
+	D(("filename is %s, image is %p\n", file->filename, (void*)im));
 
 	if (!file || !file->filename)
 		return 0;
@@ -1489,7 +1489,8 @@ void feh_display_status(char stat)
 	static int init_len = 0;
 	int j = 0;
 
-	D(("filelist %p, filelist->next %p\n", filelist, filelist->next));
+	D(("filelist %p, filelist->next %p\n",
+		(void*)filelist, (void*)filelist->next));
 
 	if (!stat) {
 		putc('\n', stderr);

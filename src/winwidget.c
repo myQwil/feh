@@ -987,7 +987,7 @@ void winwidget_hide(winwidget winwid)
 
 static void winwidget_register(winwidget win)
 {
-	D(("window %p\n", win));
+	D(("window %p\n", (void*)win));
 	window_num++;
 	if (windows)
 		windows = erealloc(windows, window_num * sizeof(winwidget));
