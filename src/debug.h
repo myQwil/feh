@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define D(a) \
 { \
 	if (opt.debug) { \
-		printf("%-12s +%-4u %-20s : ",__FILE__,__LINE__,__FUNCTION__); \
+		printf("%-12s +%-4u %-20s : ",__FILE__,__LINE__,__func__); \
 		printf a; \
 		fflush(stdout); \
 	} \

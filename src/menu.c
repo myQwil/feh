@@ -198,7 +198,7 @@ feh_menu_item *feh_menu_find_selected(feh_menu * m)
 {
 	feh_menu_item *i;
 
-	D(("menu %p\n", m));
+	D(("menu %p\n", (void*)m));
 
 	for (i = m->items; i; i = i->next) {
 		if (MENU_ITEM_IS_SELECTED(i))
@@ -212,7 +212,7 @@ feh_menu_item *feh_menu_find_selected_r(feh_menu * m, feh_menu ** parent)
 	feh_menu_item *i, *ii;
 	feh_menu *mm;
 
-	D(("menu %p\n", m));
+	D(("menu %p\n", (void*)m));
 
 	for (i = m->items; i; i = i->next) {
 		if (MENU_ITEM_IS_SELECTED(i)) {
@@ -686,7 +686,7 @@ void feh_menu_calc_size(feh_menu * m)
 
 void feh_menu_draw_item(feh_menu_item * i, Imlib_Image im, int ox, int oy)
 {
-	D(("drawing item %p (text %s)\n", i, i->text));
+	D(("drawing item %p (text %s)\n", (void*)i, i->text));
 
 	if (i->text) {
 		D(("text item\n"));

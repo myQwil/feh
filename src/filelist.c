@@ -314,10 +314,11 @@ gib_list *feh_file_info_preload(gib_list * list, int load_images)
 
 	for (l = list; l; l = l->next) {
 		file = FEH_FILE(l->data);
-		D(("file %p, file->next %p, file->name %s\n", l, l->next, file->name));
+		D(("file %p, file->next %p, file->name %s\n",
+			(void*)l, (void*)l->next, file->name));
 		if (load_images) {
 			if (feh_file_info_load(file, NULL)) {
-				D(("Failed to load file %p\n", file));
+				D(("Failed to load file %p\n", (void*)file));
 				remove_list = gib_list_add_front(remove_list, l);
 				if (opt.verbose)
 					feh_display_status('x');
