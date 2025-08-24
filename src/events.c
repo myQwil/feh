@@ -325,24 +325,29 @@ static void feh_event_handle_ButtonPress(XEvent * ev)
 
 	} else if (feh_is_bb(EVENT_prev_img, button, state)) {
 		D(("Prev Button Press event\n"));
-		if (winwid->type == WIN_TYPE_SLIDESHOW)
-			slideshow_change_image(winwid, SLIDE_PREV, 1);
-
+		if (winwid->type == WIN_TYPE_SLIDESHOW) {
+			int prev = opt.default_next == DEFAULT_NEXT_RANDOM ? SLIDE_RPREV : SLIDE_PREV;
+			slideshow_change_image(winwid, prev, 1);
+		}
 	} else if (feh_is_bb(EVENT_next_img, button, state)) {
 		D(("Next Button Press event\n"));
-		if (winwid->type == WIN_TYPE_SLIDESHOW)
-			slideshow_change_image(winwid, SLIDE_NEXT, 1);
+		if (winwid->type == WIN_TYPE_SLIDESHOW) {
+			int next = opt.default_next == DEFAULT_NEXT_RANDOM ? SLIDE_RNEXT : SLIDE_NEXT;
+			slideshow_change_image(winwid, next, 1);
+		}
 
 	} else if (feh_is_bb(EVENT_rprev_img, button, state)) {
-		D(("Prev Button Press event\n"));
-		if (winwid->type == WIN_TYPE_SLIDESHOW)
-			slideshow_change_image(winwid, SLIDE_RPREV, 1);
-
+		D(("RPrev Button Press event\n"));
+		if (winwid->type == WIN_TYPE_SLIDESHOW) {
+			int prev = opt.default_next == DEFAULT_NEXT_RANDOM ? SLIDE_PREV : SLIDE_RPREV;
+			slideshow_change_image(winwid, prev, 1);
+		}
 	} else if (feh_is_bb(EVENT_rnext_img, button, state)) {
-		D(("Next Button Press event\n"));
-		if (winwid->type == WIN_TYPE_SLIDESHOW)
-			slideshow_change_image(winwid, SLIDE_RNEXT, 1);
-
+		D(("RNext Button Press event\n"));
+		if (winwid->type == WIN_TYPE_SLIDESHOW) {
+			int next = opt.default_next == DEFAULT_NEXT_RANDOM ? SLIDE_NEXT : SLIDE_RNEXT;
+			slideshow_change_image(winwid, next, 1);
+		}
 	} else {
 		D(("Received other ButtonPress event\n"));
 		feh_event_handle_generic(winwid, state, NoSymbol, button);
@@ -390,10 +395,15 @@ static void feh_event_handle_ButtonRelease(XEvent * ev)
 			opt.mode = MODE_NORMAL;
 			winwid->mode = MODE_NORMAL;
 			if (winwid->type == WIN_TYPE_SLIDESHOW) {
-				if (opt.tap_zones && ev->xbutton.x < winwid->w / 2)
-					slideshow_change_image(winwid, SLIDE_PREV, 1);
-				else
-					slideshow_change_image(winwid, SLIDE_NEXT, 1);
+					int prev = opt.default_next == DEFAULT_NEXT_RANDOM
+						? SLIDE_RPREV : SLIDE_PREV;
+				if (opt.tap_zones && ev->xbutton.x < winwid->w / 2) {
+					slideshow_change_image(winwid, prev, 1);
+				} else {
+					int next = opt.default_next == DEFAULT_NEXT_RANDOM
+						? SLIDE_RNEXT : SLIDE_NEXT;
+					slideshow_change_image(winwid, next, 1);
+				}
 			} else if (winwid->type == WIN_TYPE_THUMBNAIL) {
 				feh_file *thumbfile;
 				int x, y;

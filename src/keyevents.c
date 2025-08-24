@@ -831,7 +831,7 @@ void feh_event_handle_generic(winwidget winwid, unsigned int state, KeySym keysy
 		opt.keep_zoom_vp = !opt.keep_zoom_vp;
 	}
 	else if (feh_is_kp(EVENT_toggle_next, state, keysym, button)) {
-		opt.timer_next = !opt.timer_next;
+		opt.default_next = !opt.default_next;
 	}
 	else if (feh_is_kp(EVENT_toggle_fixed_geometry, state, keysym, button)) {
 		if (opt.geom_flags & ((WidthValue | HeightValue))) {

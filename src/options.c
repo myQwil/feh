@@ -53,7 +53,7 @@ void init_parse_options(int argc, char **argv)
 	memset(&opt, 0, sizeof(fehoptions));
 	opt.display = 1;
 	opt.aspect = 1;
-	opt.timer_next = TIMER_NEXT_RANDOM;
+	opt.default_next = DEFAULT_NEXT_SEQUENTIAL;
 	opt.flipped = 0;
 	opt.mirrored = 0;
 	opt.inverted = 0;
@@ -430,7 +430,7 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 		{"force-aliasing", 0, 0, OPTION_force_aliasing},
 		{"no-fehbg"      , 0, 0, OPTION_no_fehbg},
 		{"keep-zoom-vp"  , 0, 0, OPTION_keep_zoom_vp},
-		{"timer-next"    , 1, 0, OPTION_timer_next},
+		{"default-next"    , 1, 0, OPTION_default_next},
 		{"flipped"       , 0, 0, OPTION_flipped},
 		{"mirrored"      , 0, 0, OPTION_mirrored},
 		{"inverted"      , 0, 0, OPTION_inverted},
@@ -800,11 +800,11 @@ static void feh_parse_option_array(int argc, char **argv, int finalrun)
 		case OPTION_keep_zoom_vp:
 			opt.keep_zoom_vp = 1;
 			break;
-		case OPTION_timer_next:
+		case OPTION_default_next:
 			if (!strcmp(optarg, "sequential")) {
-				opt.timer_next = TIMER_NEXT_SEQUENTIAL;
+				opt.default_next = DEFAULT_NEXT_SEQUENTIAL;
 			} else if (!strcmp(optarg, "random")) {
-				opt.timer_next = TIMER_NEXT_RANDOM;
+				opt.default_next = DEFAULT_NEXT_RANDOM;
 			} else {
 				weprintf("Unrecognized timer-next action \"%s\"."
 						"Supported actions: sequential, random\n", optarg);
