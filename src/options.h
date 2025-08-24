@@ -357,6 +357,7 @@ enum key_action {
 	EVENT_flip,
 	EVENT_mirror,
 	EVENT_invert,
+	EVENT_grayscale,
 	EVENT_reload_minus,
 	EVENT_reload_plus,
 	EVENT_toggle_keep_vp,

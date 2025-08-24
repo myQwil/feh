@@ -207,6 +207,7 @@ void init_keyevents(void) {
 	feh_set_kb("flip" , 0, XK_underscore, 0, 0, 0, 0);
 	feh_set_kb("mirror" , 0, XK_bar, 0, 0, 0, 0);
 	feh_set_kb("invert" , 0, XK_v, 0, 0, 0, 0);
+	feh_set_kb("grayscale" , 0, XK_backslash, 0, 0, 0, 0);
 	feh_set_kb("reload_minus" , 0, XK_minus, 0, 0, 0, 0);
 	feh_set_kb("reload_plus" , 0, XK_plus, 0, 0, 0, 0);
 	feh_set_kb("toggle_keep_vp" , 0, XK_k, 0, 0, 0, 0);
@@ -774,6 +775,9 @@ void feh_event_handle_generic(winwidget winwid, unsigned int state, KeySym keysy
 	else if (feh_is_kp(EVENT_invert, state, keysym, button)) {
 		opt.inverted = !opt.inverted;
 		feh_edit_inplace(winwid, INPLACE_EDIT_INVERT);
+	}
+	else if (feh_is_kp(EVENT_grayscale, state, keysym, button)) {
+		feh_edit_inplace(winwid, INPLACE_EDIT_GSCALE);
 	}
 	else if (feh_is_kp(EVENT_toggle_fullscreen, state, keysym, button)) {
 #ifdef HAVE_LIBXINERAMA

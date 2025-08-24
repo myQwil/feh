@@ -1542,6 +1542,47 @@ void imlib_image_color_invert(double rate)
 	imlib_free_color_modifier();
 }
 
+void imlib_image_grayscale()
+{
+	// Get the current image from the context
+	Imlib_Image image = imlib_context_get_image();
+	if (!image) return;
+
+	// Set the image as the current context
+	imlib_context_set_image(image);
+
+	// Get image dimensions
+	int width = imlib_image_get_width();
+	int height = imlib_image_get_height();
+
+	// Get image data
+	DATA32 *data = imlib_image_get_data_for_reading_only();
+	if (!data) return;
+
+	// Process each pixel
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			int index = y * width + x;
+			DATA32 pixel = data[index];
+
+			// Extract RGB components (assuming DATA32 is ARGB format)
+			uint8_t r = (pixel >> 16) & 0xFF;
+			uint8_t g = (pixel >> 8) & 0xFF;
+			uint8_t b = pixel & 0xFF;
+			uint8_t a = (pixel >> 24) & 0xFF;
+
+			// Calculate grayscale value using luminance formula
+			uint8_t gray = (uint8_t)(0.299 * r + 0.587 * g + 0.114 * b);
+
+			// Set new pixel value (preserve alpha)
+			data[index] = (a << 24) | (gray << 16) | (gray << 8) | gray;
+		}
+	}
+
+	// Put the modified data back
+	imlib_image_put_back_data(data);
+}
+
 void feh_edit_inplace(winwidget w, int op)
 {
 	int tmp;
@@ -1558,6 +1599,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_horizontal();
 		else if (op == INPLACE_EDIT_INVERT)
 			imlib_image_color_invert(1.);
+		else if (op == INPLACE_EDIT_GSCALE)
+			imlib_image_grayscale();
 		else {
 			imlib_image_orientate(op);
 			if(op != 2) {
@@ -1593,6 +1636,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_horizontal();
 		else if (op == INPLACE_EDIT_INVERT)
 			imlib_image_color_invert(1.);
+		else if (op == INPLACE_EDIT_GSCALE)
+			imlib_image_grayscale();
 		else
 			imlib_image_orientate(op);
 		gib_imlib_save_image_with_error_return(old,
@@ -1614,6 +1659,8 @@ void feh_edit_inplace(winwidget w, int op)
 			imlib_image_flip_horizontal();
 		else if (op == INPLACE_EDIT_INVERT)
 			imlib_image_color_invert(1.);
+		else if (op == INPLACE_EDIT_GSCALE)
+			imlib_image_grayscale();
 		else {
 			imlib_image_orientate(op);
 			tmp = w->im_w;
